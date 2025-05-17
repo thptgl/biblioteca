@@ -1,7 +1,7 @@
 const { useState } = React;
 
 function App() {
-  // Estados do formulário
+  // Estados dos campos
   const [titulo, setTitulo] = useState('');
   const [autor, setAutor] = useState('');
   const [tipo, setTipo] = useState('');
@@ -20,39 +20,74 @@ function App() {
       tipo: 'movie',
       genero: 'Ficção Científica',
       avaliacao: 5,
-      tags: ['épico', 'aventura'],
-      capa: 'https://upload.wikimedia.org/wikipedia/pt/9/92/Dune_2021_poster.jpg',
-      comentario: '“Clássico imperdível para fãs de sci-fi.”',
+      tags: 'épico, ficção',
+      capa: 'https://m.media-amazon.com/images/I/81rAGH+l0GL._AC_SY679_.jpg',
+      comentario: 'Filme incrível e visual impressionante.'
     },
     {
       id: 2,
-      titulo: 'Senhor dos Anéis',
-      autor: 'J.R.R. Tolkien',
+      titulo: '1984',
+      autor: 'George Orwell',
       tipo: 'book',
-      genero: 'Fantasia',
-      avaliacao: 5,
-      tags: ['fantasia', 'aventura', 'épico'],
-      capa: 'https://upload.wikimedia.org/wikipedia/pt/8/87/The_Lord_of_the_Rings_The_Fellowship_of_the_Ring_%282001%29.png',
-      comentario: '“Fantasia rica e detalhada.”',
+      genero: 'Distopia',
+      avaliacao: 4,
+      tags: 'clássico, política',
+      capa: 'https://images-na.ssl-images-amazon.com/images/I/71kxa1-0mfL.jpg',
+      comentario: 'Livro que faz refletir.'
     },
     {
       id: 3,
-      titulo: 'Stranger Things',
-      autor: 'The Duffer Brothers',
+      titulo: 'Breaking Bad',
+      autor: 'Vince Gilligan',
       tipo: 'serie',
-      genero: 'Drama, Ficção Científica',
-      avaliacao: 4,
-      tags: ['suspense', 'anos 80'],
-      capa: 'https://upload.wikimedia.org/wikipedia/en/f/f7/Stranger_Things_season_4.jpg',
-      comentario: '“Muito envolvente e nostálgico.”',
-    },
+      genero: 'Drama',
+      avaliacao: 5,
+      tags: 'intenso, viciante',
+      capa: 'https://upload.wikimedia.org/wikipedia/en/6/61/Breaking_Bad_title_card.png',
+      comentario: 'Série top, vale muito a pena.'
+    }
   ]);
 
-  // Estado para edição
+  // Estado para editar
   const [editId, setEditId] = useState(null);
 
-  // Limpar form
-  const limparFormulario = () => {
+  // Adicionar ou salvar edição
+  const adicionarItem = () => {
+    if (!titulo || !tipo) {
+      alert('Preencha pelo menos o título e o tipo.');
+      return;
+    }
+
+    if (editId) {
+      // Editar item
+      setItens(itens.map(item => item.id === editId
+        ? {
+          ...item,
+          titulo, autor, tipo, genero,
+          avaliacao: Number(avaliacao),
+          tags, capa, comentario
+        }
+        : item));
+      setEditId(null);
+    } else {
+      // Novo item
+      const novoItem = {
+        id: Date.now(),
+        titulo,
+        autor,
+        tipo,
+        genero,
+        avaliacao: Number(avaliacao),
+        tags,
+        capa,
+        comentario,
+      };
+      setItens([...itens, novoItem]);
+    }
+    limparCampos();
+  };
+
+  const limparCampos = () => {
     setTitulo('');
     setAutor('');
     setTipo('');
@@ -61,35 +96,9 @@ function App() {
     setTags('');
     setCapa('');
     setComentario('');
-    setEditId(null);
   };
 
-  // Adicionar ou salvar edição
-  const handleSubmit = () => {
-    if (!titulo || !tipo) {
-      alert('Título e Tipo são obrigatórios!');
-      return;
-    }
-    const item = {
-      id: editId || Date.now(),
-      titulo,
-      autor,
-      tipo,
-      genero,
-      avaliacao: Number(avaliacao),
-      tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''),
-      capa: capa || 'https://via.placeholder.com/240x250?text=Sem+Capa',
-      comentario: comentario ? `“${comentario}”` : '',
-    };
-    if (editId) {
-      setItens(itens.map(i => (i.id === editId ? item : i)));
-    } else {
-      setItens([...itens, item]);
-    }
-    limparFormulario();
-  };
-
-  // Editar item
+  // Carregar item para edição
   const editarItem = (id) => {
     const item = itens.find(i => i.id === id);
     if (item) {
@@ -98,9 +107,9 @@ function App() {
       setTipo(item.tipo);
       setGenero(item.genero);
       setAvaliacao(item.avaliacao);
-      setTags(item.tags.join(', '));
+      setTags(item.tags);
       setCapa(item.capa);
-      setComentario(item.comentario.replace(/^“|”$/g, '')); // Remove aspas para editar
+      setComentario(item.comentario);
       setEditId(id);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -115,28 +124,22 @@ function App() {
 
   return (
     <>
-      <h1>Biblioteca de Favoritos</h1>
-      <div className="formulario" role="form">
+      <div className="formulario">
+        <h1>Biblioteca de Favoritos</h1>
         <input
           type="text"
-          placeholder="Título *"
+          placeholder="Título"
           value={titulo}
           onChange={e => setTitulo(e.target.value)}
-          aria-label="Título"
         />
         <input
           type="text"
           placeholder="Criador/Autor"
           value={autor}
           onChange={e => setAutor(e.target.value)}
-          aria-label="Criador ou Autor"
         />
-        <select
-          value={tipo}
-          onChange={e => setTipo(e.target.value)}
-          aria-label="Tipo"
-        >
-          <option value="">Tipo *</option>
+        <select value={tipo} onChange={e => setTipo(e.target.value)}>
+          <option value="">Tipo</option>
           <option value="movie">Filme</option>
           <option value="book">Livro</option>
           <option value="serie">Série</option>
@@ -148,54 +151,55 @@ function App() {
           placeholder="Gênero"
           value={genero}
           onChange={e => setGenero(e.target.value)}
-          aria-label="Gênero"
         />
         <input
           type="number"
-          placeholder="Avaliação (0-5)"
           min="0"
           max="5"
+          placeholder="Avaliação (0-5)"
           value={avaliacao}
           onChange={e => setAvaliacao(e.target.value)}
-          aria-label="Avaliação"
         />
         <input
           type="text"
           placeholder="Tags (separadas por vírgula)"
           value={tags}
           onChange={e => setTags(e.target.value)}
-          aria-label="Tags"
         />
         <input
           type="text"
           placeholder="URL da Capa"
           value={capa}
           onChange={e => setCapa(e.target.value)}
-          aria-label="URL da Capa"
         />
         <textarea
           placeholder="Comentários"
           value={comentario}
           onChange={e => setComentario(e.target.value)}
-          aria-label="Comentários"
         />
-        <button className="botao-adicionar" onClick={handleSubmit}>
-          {editId ? 'Salvar' : 'Adicionar'}
-        </button>
+        <div className="botoes">
+          <button onClick={adicionarItem}>
+            {editId ? 'Salvar Alterações' : 'Adicionar'}
+          </button>
+        </div>
       </div>
 
-      <div className="lista" role="list">
+      <div className="lista">
         {itens.map(item => (
-          <div className="card" key={item.id} role="listitem">
-            <img src={item.capa} alt={`Capa de ${item.titulo}`} />
-            <h2>{item.titulo}</h2>
+          <div className="card" key={item.id}>
+            {item.capa ? (
+              <img src={item.capa} alt={`Capa de ${item.titulo}`} />
+            ) : (
+              <div style={{ height: '160px', backgroundColor: '#333', borderRadius: '8px', marginBottom: '1rem' }}></div>
+            )}
+            <h3>{item.titulo}</h3>
             <p><strong>Autor:</strong> {item.autor || '-'}</p>
             <p><strong>Tipo:</strong> {item.tipo}</p>
             <p><strong>Gênero:</strong> {item.genero || '-'}</p>
-            <p className="avaliacao"><strong>Avaliação:</strong> {item.avaliacao}</p>
-            <p><strong>Tags:</strong> {item.tags.join(', ') || '-'}</p>
-            <p className="comentario">{item.comentario || '-'}</p>
-            <div className="botoes-card">
+            <p><strong>Avaliação:</strong> {item.avaliacao}</p>
+            <p><strong>Tags:</strong> {item.tags || '-'}</p>
+            <p><strong>Comentário:</strong> {item.comentario || '-'}</p>
+            <div className="acoes">
               <button onClick={() => editarItem(item.id)}>Editar</button>
               <button onClick={() => excluirItem(item.id)}>Excluir</button>
             </div>
@@ -207,3 +211,4 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
