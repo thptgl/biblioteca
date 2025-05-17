@@ -1,11 +1,12 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #111;
+  background-color: #111; /* Fundo geral preto */
   color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
 }
 
 h1 {
@@ -16,7 +17,7 @@ h1 {
 }
 
 .formulario {
-  background-color: #1a1a1a;
+  background-color: #1a1a1a; /* Fundo do box formulário */
   border-radius: 12px;
   padding: 1.5rem;
   max-width: 1200px;
@@ -40,12 +41,13 @@ h1 {
 .campos select,
 .campos textarea {
   padding: 0.6rem 0.8rem;
-  background-color: #222;
+  background-color: #333; /* Fundo cinza escuro para contraste */
   color: white;
   border: none;
   border-radius: 10px;
   font-size: 0.95rem;
   width: 180px;
+  box-sizing: border-box;
 }
 
 .campos textarea {
@@ -63,6 +65,7 @@ h1 {
   justify-content: center;
   gap: 1rem;
   margin-top: 1.2rem;
+  width: 100%;
 }
 
 button {
@@ -73,6 +76,7 @@ button {
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
