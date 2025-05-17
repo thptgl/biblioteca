@@ -1,127 +1,162 @@
 const { useState } = React;
 
 function BibliotecaFavoritos() {
-  const [filmes, setFilmes] = useState([
-    {
-      id: 1,
-      titulo: 'Duna',
-      autor: 'Frank Herbert',
-      genero: 'Ficção Científica',
-      avaliacao: 5,
-      tags: ['épico', 'sci-fi'],
-      comentario: 'Muito bom!',
-    }
-  ]);
-
-  const [editandoId, setEditandoId] = useState(null);
+  const [itens, setItens] = useState([]);
+  const [busca, setBusca] = useState("");
+  const [filtroTipo, setFiltroTipo] = useState("todos");
+  const [filtroGenero, setFiltroGenero] = useState("");
   const [form, setForm] = useState({
-    titulo: '',
-    autor: '',
-    genero: '',
-    avaliacao: '',
-    tags: '',
-    comentario: '',
+    titulo: "",
+    autor: "",
+    tipo: "filme",
+    genero: "",
+    avaliacao: "",
+    tags: "",
+    capa: "",
+    comentario: "",
   });
 
-  function iniciarEdicao(filme) {
-    setEditandoId(filme.id);
-    setForm({
-      titulo: filme.titulo,
-      autor: filme.autor,
-      genero: filme.genero,
-      avaliacao: filme.avaliacao.toString(),
-      tags: filme.tags.join(', '),
-      comentario: filme.comentario,
-    });
-  }
+  const tipos = ["filme", "livro", "série", "música", "jogo"];
 
-  function cancelarEdicao() {
-    setEditandoId(null);
-    setForm({
-      titulo: '',
-      autor: '',
-      genero: '',
-      avaliacao: '',
-      tags: '',
-      comentario: '',
-    });
-  }
-
-  function salvarEdicao(id) {
-    const avaliacaoNumerica = parseFloat(form.avaliacao);
-    if (isNaN(avaliacaoNumerica) || avaliacaoNumerica < 0 || avaliacaoNumerica > 5) {
-      alert('Avaliação deve ser um número entre 0 e 5');
+  const adicionarItem = () => {
+    const novaAvaliacao = parseFloat(form.avaliacao);
+    if (isNaN(novaAvaliacao) || novaAvaliacao < 0 || novaAvaliacao > 5) {
+      alert("Avaliação deve ser entre 0 e 5");
       return;
     }
 
-    setFilmes((prev) =>
-      prev.map((f) =>
-        f.id === id
-          ? {
-              ...f,
-              titulo: form.titulo,
-              autor: form.autor,
-              genero: form.genero,
-              avaliacao: avaliacaoNumerica,
-              tags: form.tags.split(',').map((tag) => tag.trim()),
-              comentario: form.comentario,
-            }
-          : f
-      )
-    );
-    cancelarEdicao();
-  }
+    const novoItem = {
+      id: Date.now(),
+      ...form,
+      avaliacao: novaAvaliacao,
+      tags: form.tags.split(",").map((t) => t.trim()),
+    };
+    setItens([novoItem, ...itens]);
+    setForm({
+      titulo: "",
+      autor: "",
+      tipo: "filme",
+      genero: "",
+      avaliacao: "",
+      tags: "",
+      capa: "",
+      comentario: "",
+    });
+  };
 
-  function excluirFilme(id) {
-    setFilmes((prev) => prev.filter((f) => f.id !== id));
-  }
+  const excluirItem = (id) => {
+    setItens(itens.filter((i) => i.id !== id));
+  };
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }
+  const filtrados = itens.filter((item) => {
+    const correspondeBusca =
+      item.titulo.toLowerCase().includes(busca.toLowerCase()) ||
+      item.tags.some((tag) =>
+        tag.toLowerCase().includes(busca.toLowerCase())
+      );
+    const correspondeTipo =
+      filtroTipo === "todos" || item.tipo === filtroTipo;
+    const correspondeGenero =
+      filtroGenero === "" ||
+      item.genero.toLowerCase().includes(filtroGenero.toLowerCase());
+    return correspondeBusca && correspondeTipo && correspondeGenero;
+  });
 
   return (
-    <div>
-      <h1>Biblioteca de Favoritos</h1>
-      {filmes.map((filme) => (
-        <div key={filme.id} className="filme-card">
-          {editandoId === filme.id ? (
-            <>
-              <input
-                name="titulo"
-                value={form.titulo}
-                onChange={handleChange}
-                placeholder="Título"
-              />
-              <input
-                name="autor"
-                value={form.autor}
-                onChange={handleChange}
-                placeholder="Autor"
-              />
-              <input
-                name="genero"
-                value={form.genero}
-                onChange={handleChange}
-                placeholder="Gênero"
-              />
-              <input
-                name="avaliacao"
-                type="number"
-                min="0"
-                max="5"
-                step="0.1"
-                value={form.avaliacao}
-                onChange={handleChange}
-                placeholder="Avaliação"
-              />
-              <input
-                name="tags"
-                value={form.tags}
-                onChange={handleChange}
-                placeholder="Tags (separadas por vírgula)"
-              />
-              <textarea
-                name="comentario"
-                value={form.comentario}
+    <div className="app">
+      <h1>📚 Biblioteca de Favoritos</h1>
+
+      <div className="formulario">
+        <input
+          placeholder="Título"
+          value={form.titulo}
+          onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+        />
+        <input
+          placeholder="Criador/Autor"
+          value={form.autor}
+          onChange={(e) => setForm({ ...form, autor: e.target.value })}
+        />
+        <select
+          value={form.tipo}
+          onChange={(e) => setForm({ ...form, tipo: e.target.value })}
+        >
+          {tipos.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+        <input
+          placeholder="Gênero"
+          value={form.genero}
+          onChange={(e) => setForm({ ...form, genero: e.target.value })}
+        />
+        <input
+          type="number"
+          placeholder="Avaliação (0-5)"
+          value={form.avaliacao}
+          onChange={(e) => setForm({ ...form, avaliacao: e.target.value })}
+        />
+        <input
+          placeholder="Tags (separadas por vírgula)"
+          value={form.tags}
+          onChange={(e) => setForm({ ...form, tags: e.target.value })}
+        />
+        <input
+          placeholder="URL da Capa"
+          value={form.capa}
+          onChange={(e) => setForm({ ...form, capa: e.target.value })}
+        />
+        <textarea
+          placeholder="Comentários"
+          value={form.comentario}
+          onChange={(e) => setForm({ ...form, comentario: e.target.value })}
+        />
+        <button onClick={adicionarItem}>Adicionar</button>
+      </div>
+
+      <div className="filtros">
+        <input
+          placeholder="Buscar..."
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+        />
+        <select
+          value={filtroTipo}
+          onChange={(e) => setFiltroTipo(e.target.value)}
+        >
+          <option value="todos">Todos os tipos</option>
+          {tipos.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+        <input
+          placeholder="Filtrar por gênero"
+          value={filtroGenero}
+          onChange={(e) => setFiltroGenero(e.target.value)}
+        />
+      </div>
+
+      <div className="lista">
+        {filtrados.map((item) => (
+          <div key={item.id} className="card">
+            {item.capa && <img src={item.capa} alt={item.titulo} />}
+            <h2>{item.titulo}</h2>
+            <p><b>Autor:</b> {item.autor}</p>
+            <p><b>Tipo:</b> {item.tipo}</p>
+            <p><b>Gênero:</b> {item.genero}</p>
+            <p><b>Avaliação:</b> {item.avaliacao}/5</p>
+            <p><b>Tags:</b> {item.tags.join(", ")}</p>
+            <p><b>Comentário:</b> {item.comentario}</p>
+            <button onClick={() => excluirItem(item.id)}>Excluir</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<BibliotecaFavoritos />);
