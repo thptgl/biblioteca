@@ -1,84 +1,74 @@
+/* Reset básico */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  background-color: #111;
+  color: #fff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #111; /* fundo preto */
-  color: #eee; /* texto branco claro */
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  padding: 1rem;
 }
 
 h1 {
-  color: #fff;
-  margin: 2rem 0 1rem;
-  text-align: center;
+  margin-bottom: 1rem;
   font-size: 2.4rem;
+  text-align: center;
+  color: #fff;
 }
 
 .formulario {
-  background-color: #222; /* cinza escuro */
+  background-color: #1a1a1a;
   border-radius: 12px;
-  padding: 1.5rem;
-  max-width: 1200px;
-  width: 95%;
+  padding: 1rem 1.5rem;
+  max-width: 900px;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
   margin-bottom: 2rem;
   box-shadow: 0 0 10px #000;
 }
 
-.campos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  width: 100%;
-}
-
-.campos input,
-.campos select,
-.campos textarea {
-  padding: 0.6rem 0.8rem;
-  background-color: #333; /* fundo das caixas */
-  color: white;
+.formulario input,
+.formulario select,
+.formulario textarea {
+  background-color: #333;
   border: none;
   border-radius: 10px;
-  font-size: 0.95rem;
-  width: 180px;
-  box-sizing: border-box;
+  color: #fff;
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  flex: 1 1 180px;
+  min-width: 180px;
 }
 
-.campos textarea {
-  resize: vertical;
+.formulario textarea {
   min-height: 60px;
-  width: 380px;
-}
-
-.campo-longo {
-  width: 380px;
+  flex: 1 1 380px;
+  resize: vertical;
 }
 
 .botoes {
+  width: 100%;
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 1.2rem;
-  width: 100%;
+  margin-top: 1rem;
 }
 
 button {
   background-color: #444;
   color: white;
-  padding: 0.6rem 1.2rem;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 10px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -89,40 +79,63 @@ button:hover {
 
 .lista {
   display: flex;
-  justify-content: center;
   gap: 1.5rem;
-  padding: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 900px;
   width: 100%;
-  max-width: 1200px;
-  overflow-x: auto; /* caso passe da largura */
 }
 
 .card {
-  background-color: #222;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #000;
+  width: 280px;
   padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 0 8px #000;
-  text-align: center;
-  width: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #eee;
 }
 
 .card img {
   width: 100%;
-  max-height: 250px;
+  height: 160px;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 1rem;
 }
 
-.card button {
-  margin: 0.3rem 0.2rem;
-  width: 48%;
+.card h3 {
+  margin: 0.3rem 0 0.6rem;
+  font-size: 1.3rem;
 }
 
-.card .avaliacao {
-  font-weight: bold;
-  margin: 0.5rem 0;
+.card p {
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+}
+
+.card .acoes {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card button {
+  flex: 1;
+  margin: 0 0.3rem;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }
