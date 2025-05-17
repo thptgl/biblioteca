@@ -21,8 +21,8 @@ function App() {
       genero: 'Ficção Científica',
       avaliacao: 5,
       tags: 'épico, ficção',
-      capa: 'https://m.media-amazon.com/images/I/81rAGH+l0GL._AC_SY679_.jpg',
-      comentario: 'Filme incrível e visual impressionante.'
+      capa: '',
+      comentario: '"Filme incrível e visual impressionante."'
     },
     {
       id: 2,
@@ -32,8 +32,8 @@ function App() {
       genero: 'Distopia',
       avaliacao: 4,
       tags: 'clássico, política',
-      capa: 'https://images-na.ssl-images-amazon.com/images/I/71kxa1-0mfL.jpg',
-      comentario: 'Livro que faz refletir.'
+      capa: '',
+      comentario: '"Livro que faz refletir."'
     },
     {
       id: 3,
@@ -43,8 +43,8 @@ function App() {
       genero: 'Drama',
       avaliacao: 5,
       tags: 'intenso, viciante',
-      capa: 'https://upload.wikimedia.org/wikipedia/en/6/61/Breaking_Bad_title_card.png',
-      comentario: 'Série top, vale muito a pena.'
+      capa: '',
+      comentario: '"Série top, vale muito a pena."'
     }
   ]);
 
