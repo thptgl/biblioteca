@@ -5,13 +5,12 @@ function BibliotecaFavoritos() {
     {
       id: 1,
       titulo: 'Duna',
-      autor: 'Autor Exemplo',
+      autor: 'Frank Herbert',
       genero: 'Ficção Científica',
       avaliacao: 5,
-      tags: ['épico', 'ficção'],
-      comentario: 'Ótimo filme!',
-    },
-    // ... outros filmes
+      tags: ['épico', 'sci-fi'],
+      comentario: 'Muito bom!',
+    }
   ]);
 
   const [editandoId, setEditandoId] = useState(null);
@@ -24,20 +23,18 @@ function BibliotecaFavoritos() {
     comentario: '',
   });
 
-  // Inicia edição
   function iniciarEdicao(filme) {
     setEditandoId(filme.id);
     setForm({
       titulo: filme.titulo,
       autor: filme.autor,
       genero: filme.genero,
-      avaliacao: filme.avaliacao,
+      avaliacao: filme.avaliacao.toString(),
       tags: filme.tags.join(', '),
       comentario: filme.comentario,
     });
   }
 
-  // Cancela edição
   function cancelarEdicao() {
     setEditandoId(null);
     setForm({
@@ -50,18 +47,23 @@ function BibliotecaFavoritos() {
     });
   }
 
-  // Salva edição
   function salvarEdicao(id) {
-    setFilmes((oldFilmes) =>
-      oldFilmes.map((f) =>
+    const avaliacaoNumerica = parseFloat(form.avaliacao);
+    if (isNaN(avaliacaoNumerica) || avaliacaoNumerica < 0 || avaliacaoNumerica > 5) {
+      alert('Avaliação deve ser um número entre 0 e 5');
+      return;
+    }
+
+    setFilmes((prev) =>
+      prev.map((f) =>
         f.id === id
           ? {
               ...f,
               titulo: form.titulo,
               autor: form.autor,
               genero: form.genero,
-              avaliacao: Number(form.avaliacao),
-              tags: form.tags.split(',').map((t) => t.trim()),
+              avaliacao: avaliacaoNumerica,
+              tags: form.tags.split(',').map((tag) => tag.trim()),
               comentario: form.comentario,
             }
           : f
@@ -70,21 +72,18 @@ function BibliotecaFavoritos() {
     cancelarEdicao();
   }
 
-  // Excluir filme
   function excluirFilme(id) {
-    setFilmes((oldFilmes) => oldFilmes.filter((f) => f.id !== id));
+    setFilmes((prev) => prev.filter((f) => f.id !== id));
   }
 
-  // Atualiza campos do form
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm((old) => ({ ...old, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   }
 
   return (
     <div>
       <h1>Biblioteca de Favoritos</h1>
-
       {filmes.map((filme) => (
         <div key={filme.id} className="filme-card">
           {editandoId === filme.id ? (
@@ -112,6 +111,7 @@ function BibliotecaFavoritos() {
                 type="number"
                 min="0"
                 max="5"
+                step="0.1"
                 value={form.avaliacao}
                 onChange={handleChange}
                 placeholder="Avaliação"
@@ -120,33 +120,8 @@ function BibliotecaFavoritos() {
                 name="tags"
                 value={form.tags}
                 onChange={handleChange}
-                placeholder="Tags (vírgula separados)"
+                placeholder="Tags (separadas por vírgula)"
               />
               <textarea
                 name="comentario"
                 value={form.comentario}
-                onChange={handleChange}
-                placeholder="Comentário"
-              />
-              <button onClick={() => salvarEdicao(filme.id)}>Salvar</button>
-              <button onClick={cancelarEdicao}>Cancelar</button>
-            </>
-          ) : (
-            <>
-              <h2>{filme.titulo}</h2>
-              <p><b>Autor:</b> {filme.autor}</p>
-              <p><b>Gênero:</b> {filme.genero}</p>
-              <p><b>Avaliação:</b> {filme.avaliacao}</p>
-              <p><b>Tags:</b> {filme.tags.join(', ')}</p>
-              <p><b>Comentário:</b> {filme.comentario}</p>
-              <button onClick={() => iniciarEdicao(filme)}>Editar</button>
-              <button onClick={() => excluirFilme(filme.id)}>Excluir</button>
-            </>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<BibliotecaFavoritos />);
