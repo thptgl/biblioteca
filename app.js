@@ -60,7 +60,7 @@ function BibliotecaFavoritos() {
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "1rem", fontFamily: "Arial" }}>
-      <h1>📚 Biblioteca de Favoritos</h1>
+      <h1>Biblioteca de Favoritos</h1>
 
       <form onSubmit={handleAdd} style={{ marginBottom: "1rem" }}>
         <input name="title" placeholder="Título" value={form.title} onChange={handleChange} required />
