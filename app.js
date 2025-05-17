@@ -4,28 +4,6 @@ function BibliotecaFavoritos() {
   const exemplos = [
     {
       id: 1,
-      titulo: "Duna",
-      autor: "Frank Herbert",
-      tipo: "filme",
-      genero: "Ficção Científica",
-      avaliacao: 5,
-      tags: ["épico", "futuro"],
-      capa: "https://m.media-amazon.com/images/I/71VbHaAqbML._AC_SY679_.jpg",
-      comentario: "Incrível adaptação visual.",
-    },
-    {
-      id: 2,
-      titulo: "O Senhor dos Anéis",
-      autor: "J.R.R. Tolkien",
-      tipo: "filme",
-      genero: "Fantasia",
-      avaliacao: 4.8,
-      tags: ["aventura", "épico"],
-      capa: "https://m.media-amazon.com/images/I/81EBpJ1Dy+L._AC_SY679_.jpg",
-      comentario: "Uma obra-prima.",
-    },
-    {
-      id: 3,
       titulo: "Matrix",
       autor: "The Wachowskis",
       tipo: "filme",
