@@ -1,125 +1,152 @@
-const { useState, useEffect } = React;
+const { useState } = React;
 
 function BibliotecaFavoritos() {
-  const [items, setItems] = useState(() => {
-    const saved = localStorage.getItem("biblioteca");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [filmes, setFilmes] = useState([
+    {
+      id: 1,
+      titulo: 'Duna',
+      autor: 'Autor Exemplo',
+      genero: 'Ficção Científica',
+      avaliacao: 5,
+      tags: ['épico', 'ficção'],
+      comentario: 'Ótimo filme!',
+    },
+    // ... outros filmes
+  ]);
 
-  const [filteredItems, setFilteredItems] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState('all');
-  const [selectedGenre, setSelectedGenre] = useState('all');
+  const [editandoId, setEditandoId] = useState(null);
   const [form, setForm] = useState({
-    title: "",
-    type: "movie",
-    genre: "",
-    creator: "",
-    rating: "",
-    tags: "",
-    comments: "",
-    cover: ""
+    titulo: '',
+    autor: '',
+    genero: '',
+    avaliacao: '',
+    tags: '',
+    comentario: '',
   });
 
-  useEffect(() => {
-    localStorage.setItem("biblioteca", JSON.stringify(items));
-  }, [items]);
+  // Inicia edição
+  function iniciarEdicao(filme) {
+    setEditandoId(filme.id);
+    setForm({
+      titulo: filme.titulo,
+      autor: filme.autor,
+      genero: filme.genero,
+      avaliacao: filme.avaliacao,
+      tags: filme.tags.join(', '),
+      comentario: filme.comentario,
+    });
+  }
 
-  useEffect(() => {
-    let result = [...items];
-    const term = searchTerm.toLowerCase();
-    if (term) {
-      result = result.filter(item =>
-        item.title.toLowerCase().includes(term) ||
-        item.creator.toLowerCase().includes(term) ||
-        item.tags.some(tag => tag.toLowerCase().includes(term))
-      );
-    }
-    if (selectedType !== 'all') result = result.filter(i => i.type === selectedType);
-    if (selectedGenre !== 'all') result = result.filter(i => i.genre === selectedGenre);
-    setFilteredItems(result);
-  }, [items, searchTerm, selectedType, selectedGenre]);
+  // Cancela edição
+  function cancelarEdicao() {
+    setEditandoId(null);
+    setForm({
+      titulo: '',
+      autor: '',
+      genero: '',
+      avaliacao: '',
+      tags: '',
+      comentario: '',
+    });
+  }
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  // Salva edição
+  function salvarEdicao(id) {
+    setFilmes((oldFilmes) =>
+      oldFilmes.map((f) =>
+        f.id === id
+          ? {
+              ...f,
+              titulo: form.titulo,
+              autor: form.autor,
+              genero: form.genero,
+              avaliacao: Number(form.avaliacao),
+              tags: form.tags.split(',').map((t) => t.trim()),
+              comentario: form.comentario,
+            }
+          : f
+      )
+    );
+    cancelarEdicao();
+  }
 
-  const handleAdd = (e) => {
-    e.preventDefault();
-    const newItem = {
-      ...form,
-      id: Date.now(),
-      tags: form.tags.split(',').map(t => t.trim()),
-      rating: parseFloat(form.rating)
-    };
-    setItems([newItem, ...items]);
-    setForm({ title: "", type: "movie", genre: "", creator: "", rating: "", tags: "", comments: "", cover: "" });
-  };
+  // Excluir filme
+  function excluirFilme(id) {
+    setFilmes((oldFilmes) => oldFilmes.filter((f) => f.id !== id));
+  }
 
-  const genres = ["all", ...new Set(items.map(i => i.genre))];
+  // Atualiza campos do form
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setForm((old) => ({ ...old, [name]: value }));
+  }
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "1rem", fontFamily: "Arial" }}>
+    <div>
       <h1>Biblioteca de Favoritos</h1>
 
-      <form onSubmit={handleAdd} style={{ marginBottom: "1rem" }}>
-        <input name="title" placeholder="Título" value={form.title} onChange={handleChange} required />
-        <input name="creator" placeholder="Criador/Autor" value={form.creator} onChange={handleChange} />
-        <select name="type" value={form.type} onChange={handleChange}>
-          <option value="movie">Filme</option>
-          <option value="book">Livro</option>
-          <option value="series">Série</option>
-          <option value="music">Música</option>
-          <option value="game">Jogo</option>
-        </select>
-        <input name="genre" placeholder="Gênero" value={form.genre} onChange={handleChange} />
-        <input name="rating" type="number" placeholder="Avaliação (0-5)" value={form.rating} onChange={handleChange} />
-        <input name="tags" placeholder="Tags (separadas por vírgula)" value={form.tags} onChange={handleChange} />
-        <input name="cover" placeholder="URL da Capa" value={form.cover} onChange={handleChange} />
-        <textarea name="comments" placeholder="Comentários" value={form.comments} onChange={handleChange} />
-        <button type="submit">Adicionar</button>
-      </form>
-
-      <input
-        placeholder="Buscar..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ width: "100%", marginBottom: "1rem", padding: "0.5rem" }}
-      />
-
-      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-        <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
-          <option value="all">Todos os tipos</option>
-          <option value="movie">Filmes</option>
-          <option value="book">Livros</option>
-          <option value="series">Séries</option>
-          <option value="music">Músicas</option>
-          <option value="game">Jogos</option>
-        </select>
-        <select value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)}>
-          <option value="all">Todos os gêneros</option>
-          {genres.filter(g => g !== 'all').map(g => (
-            <option key={g}>{g}</option>
-          ))}
-        </select>
-      </div>
-
-      {filteredItems.map(item => (
-        <div key={item.id} className="card">
-          {item.cover && <img src={item.cover} alt={item.title} style={{ width: "100px", float: "left", marginRight: "1rem" }} />}
-          <h3>{item.title}</h3>
-          <p><strong>Autor:</strong> {item.creator}</p>
-          <p><strong>Tipo:</strong> {item.type}</p>
-          <p><strong>Gênero:</strong> {item.genre}</p>
-          <p><strong>Avaliação:</strong> {item.rating}</p>
-          <p><strong>Tags:</strong> {item.tags.join(", ")}</p>
-          <p><strong>Comentário:</strong> {item.comments}</p>
-          <div style={{ clear: "both" }}></div>
+      {filmes.map((filme) => (
+        <div key={filme.id} className="filme-card">
+          {editandoId === filme.id ? (
+            <>
+              <input
+                name="titulo"
+                value={form.titulo}
+                onChange={handleChange}
+                placeholder="Título"
+              />
+              <input
+                name="autor"
+                value={form.autor}
+                onChange={handleChange}
+                placeholder="Autor"
+              />
+              <input
+                name="genero"
+                value={form.genero}
+                onChange={handleChange}
+                placeholder="Gênero"
+              />
+              <input
+                name="avaliacao"
+                type="number"
+                min="0"
+                max="5"
+                value={form.avaliacao}
+                onChange={handleChange}
+                placeholder="Avaliação"
+              />
+              <input
+                name="tags"
+                value={form.tags}
+                onChange={handleChange}
+                placeholder="Tags (vírgula separados)"
+              />
+              <textarea
+                name="comentario"
+                value={form.comentario}
+                onChange={handleChange}
+                placeholder="Comentário"
+              />
+              <button onClick={() => salvarEdicao(filme.id)}>Salvar</button>
+              <button onClick={cancelarEdicao}>Cancelar</button>
+            </>
+          ) : (
+            <>
+              <h2>{filme.titulo}</h2>
+              <p><b>Autor:</b> {filme.autor}</p>
+              <p><b>Gênero:</b> {filme.genero}</p>
+              <p><b>Avaliação:</b> {filme.avaliacao}</p>
+              <p><b>Tags:</b> {filme.tags.join(', ')}</p>
+              <p><b>Comentário:</b> {filme.comentario}</p>
+              <button onClick={() => iniciarEdicao(filme)}>Editar</button>
+              <button onClick={() => excluirFilme(filme.id)}>Excluir</button>
+            </>
+          )}
         </div>
       ))}
     </div>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<BibliotecaFavoritos />);
+ReactDOM.createRoot(document.getElementById('root')).render(<BibliotecaFavoritos />);
