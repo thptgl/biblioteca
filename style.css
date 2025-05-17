@@ -84,12 +84,15 @@ button:hover {
 }
 
 .lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  display: flex;
+  justify-content: center;
   gap: 1.5rem;
   padding: 1rem;
   width: 100%;
   max-width: 1200px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  margin-bottom: 2rem;
 }
 
 .card {
@@ -98,6 +101,10 @@ button:hover {
   border-radius: 10px;
   box-shadow: 0 0 8px #000;
   text-align: center;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .card img {
@@ -106,4 +113,20 @@ button:hover {
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 1rem;
+}
+
+.card button {
+  margin: 0.3rem 0.2rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.3s ease;
+}
+
+.card button:hover {
+  background-color: #666;
 }
