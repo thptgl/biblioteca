@@ -1,8 +1,12 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #111; /* Fundo geral preto */
-  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #111; /* fundo preto */
+  color: #eee; /* texto branco claro */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,14 +14,14 @@ body {
 }
 
 h1 {
+  color: #fff;
+  margin: 2rem 0 1rem;
   text-align: center;
-  padding: 2rem 0 1rem;
-  font-size: 2.2rem;
-  color: #ffffff;
+  font-size: 2.4rem;
 }
 
 .formulario {
-  background-color: #1a1a1a; /* Fundo do box formulário */
+  background-color: #222; /* cinza escuro */
   border-radius: 12px;
   padding: 1.5rem;
   max-width: 1200px;
@@ -41,7 +45,7 @@ h1 {
 .campos select,
 .campos textarea {
   padding: 0.6rem 0.8rem;
-  background-color: #333; /* Fundo cinza escuro para contraste */
+  background-color: #333; /* fundo das caixas */
   color: white;
   border: none;
   border-radius: 10px;
@@ -90,18 +94,16 @@ button:hover {
   padding: 1rem;
   width: 100%;
   max-width: 1200px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  margin-bottom: 2rem;
+  overflow-x: auto; /* caso passe da largura */
 }
 
 .card {
-  background-color: #1e1e1e;
+  background-color: #222;
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 0 8px #000;
   text-align: center;
-  min-width: 240px;
+  width: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -117,16 +119,10 @@ button:hover {
 
 .card button {
   margin: 0.3rem 0.2rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: 6px;
-  border: none;
-  background-color: #444;
-  color: white;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 0.3s ease;
+  width: 48%;
 }
 
-.card button:hover {
-  background-color: #666;
+.card .avaliacao {
+  font-weight: bold;
+  margin: 0.5rem 0;
 }
