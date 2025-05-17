@@ -1,6 +1,47 @@
-const { useState } = React;
+const { useState, useEffect } = React;
 
 function App() {
+  const [items, setItems] = useState(() => {
+    // Carrega do localStorage se tiver
+    const saved = localStorage.getItem('bibliotecaFavoritos');
+    return saved ? JSON.parse(saved) : [
+      // 3 exemplos iniciais
+      {
+        id: 1,
+        titulo: 'Duna',
+        autor: 'Frank Herbert',
+        tipo: 'movie',
+        genero: 'Ficção Científica',
+        avaliacao: 5,
+        tags: ['Sci-fi', 'Clássico'],
+        capa: 'https://upload.wikimedia.org/wikipedia/pt/thumb/7/7f/Dune_2021_Poster.jpg/220px-Dune_2021_Poster.jpg',
+        comentario: 'Um épico de ficção científica.'
+      },
+      {
+        id: 2,
+        titulo: 'O Senhor dos Anéis',
+        autor: 'J.R.R. Tolkien',
+        tipo: 'book',
+        genero: 'Fantasia',
+        avaliacao: 5,
+        tags: ['Fantasia', 'Aventura'],
+        capa: 'https://upload.wikimedia.org/wikipedia/pt/thumb/8/86/Senhor_dos_aneis_capa.jpg/220px-Senhor_dos_aneis_capa.jpg',
+        comentario: 'Clássico da literatura fantástica.'
+      },
+      {
+        id: 3,
+        titulo: 'Breaking Bad',
+        autor: 'Vince Gilligan',
+        tipo: 'serie',
+        genero: 'Drama',
+        avaliacao: 5,
+        tags: ['Crime', 'Drama'],
+        capa: 'https://upload.wikimedia.org/wikipedia/pt/thumb/e/e3/Breaking_Bad_title_card.png/220px-Breaking_Bad_title_card.png',
+        comentario: 'Série aclamada pela crítica.'
+      },
+    ];
+  });
+
   const [titulo, setTitulo] = useState('');
   const [autor, setAutor] = useState('');
   const [tipo, setTipo] = useState('');
@@ -9,44 +50,13 @@ function App() {
   const [tags, setTags] = useState('');
   const [capa, setCapa] = useState('');
   const [comentario, setComentario] = useState('');
-  const [lista, setLista] = useState([
-    {
-      id: 1,
-      titulo: "Duna",
-      autor: "Frank Herbert",
-      tipo: "movie",
-      genero: "Ficção Científica",
-      avaliacao: 5,
-      tags: "épico, aventura",
-      capa: "https://m.media-amazon.com/images/I/91sdwT7VKqL._AC_SY679_.jpg",
-      comentario: "Um clássico da ficção científica."
-    },
-    {
-      id: 2,
-      titulo: "O Senhor dos Anéis",
-      autor: "J.R.R. Tolkien",
-      tipo: "book",
-      genero: "Fantasia",
-      avaliacao: 5,
-      tags: "aventura, épico",
-      capa: "https://images-na.ssl-images-amazon.com/images/I/51EstVXM1UL._SX331_BO1,204,203,200_.jpg",
-      comentario: "Maravilhoso livro de fantasia."
-    },
-    {
-      id: 3,
-      titulo: "Stranger Things",
-      autor: "The Duffer Brothers",
-      tipo: "serie",
-      genero: "Suspense",
-      avaliacao: 4,
-      tags: "sci-fi, mistério",
-      capa: "https://upload.wikimedia.org/wikipedia/pt/3/38/Stranger_Things_logo.png",
-      comentario: "Série ótima para maratonar."
-    }
-  ]);
-  const [editandoId, setEditandoId] = useState(null);
+  const [editId, setEditId] = useState(null);
 
-  function limparCampos() {
+  useEffect(() => {
+    localStorage.setItem('bibliotecaFavoritos', JSON.stringify(items));
+  }, [items]);
+
+  function resetForm() {
     setTitulo('');
     setAutor('');
     setTipo('');
@@ -55,65 +65,52 @@ function App() {
     setTags('');
     setCapa('');
     setComentario('');
-    setEditandoId(null);
+    setEditId(null);
   }
 
   function adicionarItem() {
-    if (!titulo.trim()) {
-      alert("O título é obrigatório!");
+    if (!titulo || !tipo) {
+      alert('Título e Tipo são obrigatórios');
       return;
     }
+    const novoItem = {
+      id: editId ? editId : Date.now(),
+      titulo,
+      autor,
+      tipo,
+      genero,
+      avaliacao: Number(avaliacao) || 0,
+      tags: tags.split(',').map(t => t.trim()).filter(t => t),
+      capa,
+      comentario,
+    };
 
-    if (editandoId !== null) {
-      // Edita
-      setLista(lista.map(item => item.id === editandoId ? {
-        id: editandoId,
-        titulo,
-        autor,
-        tipo,
-        genero,
-        avaliacao: Number(avaliacao),
-        tags,
-        capa,
-        comentario
-      } : item));
-      limparCampos();
+    if (editId) {
+      setItems(items.map(item => (item.id === editId ? novoItem : item)));
     } else {
-      // Adiciona
-      const novo = {
-        id: Date.now(),
-        titulo,
-        autor,
-        tipo,
-        genero,
-        avaliacao: Number(avaliacao),
-        tags,
-        capa,
-        comentario
-      };
-      setLista([...lista, novo]);
-      limparCampos();
+      setItems([...items, novoItem]);
     }
+    resetForm();
   }
 
   function editarItem(id) {
-    const item = lista.find(i => i.id === id);
+    const item = items.find(i => i.id === id);
     if (!item) return;
     setTitulo(item.titulo);
     setAutor(item.autor);
     setTipo(item.tipo);
     setGenero(item.genero);
     setAvaliacao(item.avaliacao);
-    setTags(item.tags);
+    setTags(item.tags.join(', '));
     setCapa(item.capa);
     setComentario(item.comentario);
-    setEditandoId(id);
+    setEditId(id);
   }
 
   function excluirItem(id) {
-    if (confirm("Deseja mesmo excluir este item?")) {
-      setLista(lista.filter(item => item.id !== id));
-      if (editandoId === id) limparCampos();
+    if (window.confirm('Tem certeza que quer excluir este item?')) {
+      setItems(items.filter(i => i.id !== id));
+      if (editId === id) resetForm();
     }
   }
 
@@ -139,23 +136,30 @@ function App() {
           <textarea className="campo-longo" placeholder="Comentários" value={comentario} onChange={e => setComentario(e.target.value)} />
         </div>
         <div className="botoes">
-          <button onClick={adicionarItem}>{editandoId !== null ? "Salvar" : "Adicionar"}</button>
-          {editandoId !== null && <button onClick={limparCampos}>Cancelar</button>}
+          <button onClick={adicionarItem}>{editId ? 'Salvar' : 'Adicionar'}</button>
+          {editId && <button onClick={resetForm}>Cancelar</button>}
         </div>
       </div>
 
       <div className="lista">
-        {lista.map(item => (
-          <div key={item.id} className="card">
-            {item.capa && <img src={item.capa} alt={`Capa de ${item.titulo}`} />}
+        {items.map(item => (
+          <div className="card" key={item.id}>
+            {item.capa ? (
+              <img src={item.capa} alt={`Capa de ${item.titulo}`} />
+            ) : (
+              <div style={{height: '250px', backgroundColor: '#555', borderRadius: '8px', marginBottom: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#ccc'}}>
+                Sem imagem
+              </div>
+            )}
             <h3>{item.titulo}</h3>
-            <p><strong>Autor:</strong> {item.autor}</p>
-            <p><strong>Tipo:</strong> {item.tipo}</p>
-            <p><strong>Gênero:</strong> {item.genero}</p>
-            <p><strong>Avaliação:</strong> {item.avaliacao}</p>
-            <p><strong>Tags:</strong> {item.tags}</p>
-            <p><strong>Comentário:</strong> {item.comentario}</p>
-            <div>
+            <p><b>Autor:</b> {item.autor || '—'}</p>
+            <p><b>Tipo:</b> {item.tipo}</p>
+            <p><b>Gênero:</b> {item.genero || '—'}</p>
+            <p className="avaliacao"><b>Avaliação:</b> {item.avaliacao}/5</p>
+            <p><b>Tags:</b> {item.tags.join(', ') || '—'}</p>
+            <p><b>Comentário:</b> {item.comentario || '—'}</p>
+
+            <div style={{display: 'flex', gap: '0.5rem', marginTop: '1rem'}}>
               <button onClick={() => editarItem(item.id)}>Editar</button>
               <button onClick={() => excluirItem(item.id)}>Excluir</button>
             </div>
@@ -166,4 +170,4 @@ function App() {
   );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
