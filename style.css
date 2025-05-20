@@ -1,13 +1,13 @@
 /* Reset básico */
 * {
   box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body {
   margin: 0;
   background-color: #111;
   color: #fff;
-  font-family: 'Segoe UI', Tahoma, Verdana;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,30 +29,61 @@ h1 {
   max-width: 900px;
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 2rem;
   box-shadow: 0 0 10px #000;
 }
 
-.formulario input,
-.formulario select,
-.formulario textarea {
+.formulario h1.titulo {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.form-campos {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+  align-items: center;
+}
+
+.grupo-campos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.grupo-campos input,
+.grupo-campos select,
+.grupo-campos textarea {
   background-color: #333;
   border: none;
   border-radius: 10px;
   color: #fff;
   padding: 0.6rem 0.8rem;
   font-size: 1rem;
-  flex: 1 1 180px;
-  min-width: 180px;
+  flex: 1 1 220px;
+  max-width: 300px;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-.formulario textarea {
+.grupo-campos textarea {
   min-height: 60px;
-  flex: 1 1 380px;
   resize: vertical;
+}
+
+.grupo-campos input:focus,
+.grupo-campos select:focus,
+.grupo-campos textarea:focus {
+  outline: none;
+  background-color: #444;
+  box-shadow: 0 0 5px #888;
 }
 
 .botoes {
