@@ -1,142 +1,19 @@
-/* Reset básico */
-* {
-  box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biblioteca de Favoritos</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="root"></div>
 
-body {
-  margin: 0;
-  background-color: #111;
-  color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 1rem;
-}
+  <!-- React + ReactDOM + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-h1 {
-  margin-bottom: 1rem;
-  font-size: 2.4rem;
-  text-align: center;
-  color: #fff;
-}
-
-.formulario {
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  padding: 1rem 1.5rem;
-  max-width: 900px;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2rem;
-  box-shadow: 0 0 10px #000;
-}
-
-.formulario input,
-.formulario select,
-.formulario textarea {
-  background-color: #333;
-  border: none;
-  border-radius: 10px;
-  color: #fff;
-  padding: 0.6rem 0.8rem;
-  font-size: 1rem;
-  flex: 1 1 180px;
-  min-width: 180px;
-}
-
-.formulario textarea {
-  min-height: 60px;
-  flex: 1 1 380px;
-  resize: vertical;
-}
-
-.botoes {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-button {
-  background-color: #444;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 0.7rem 1.5rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #666;
-}
-
-.lista {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 900px;
-  width: 100%;
-}
-
-.card {
-  background-color: #1e1e1e;
-  border-radius: 12px;
-  box-shadow: 0 0 10px #000;
-  width: 280px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #eee;
-}
-
-.card img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-.card h3 {
-  margin: 0.3rem 0 0.6rem;
-  font-size: 1.3rem;
-}
-
-.card p {
-  margin: 0.2rem 0;
-  font-size: 0.95rem;
-}
-
-.card .acoes {
-  margin-top: 1rem;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.card button {
-  flex: 1;
-  margin: 0 0.3rem;
-  font-size: 0.9rem;
-  padding: 0.5rem;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
+  <script type="text/babel" src="app.js"></script>
+</body>
+</html>
