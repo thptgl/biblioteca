@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+const { useState } = React;
 
 function App() {
+  // Estados dos campos
   const [titulo, setTitulo] = useState('');
   const [autor, setAutor] = useState('');
   const [tipo, setTipo] = useState('');
@@ -10,6 +11,7 @@ function App() {
   const [capa, setCapa] = useState('');
   const [comentario, setComentario] = useState('');
 
+  // Lista de itens
   const [itens, setItens] = useState([
     {
       id: 1,
@@ -19,8 +21,8 @@ function App() {
       genero: 'Ficção Científica',
       avaliacao: 5,
       tags: 'épico, ficção',
-      capa: '',
-      comentario: '"Filme incrível e visual impressionante."'
+      capa: 'https://m.media-amazon.com/images/I/81rAGH+l0GL._AC_SY679_.jpg',
+      comentario: 'Filme incrível e visual impressionante.'
     },
     {
       id: 2,
@@ -30,8 +32,8 @@ function App() {
       genero: 'Distopia',
       avaliacao: 4,
       tags: 'clássico, política',
-      capa: '',
-      comentario: '"Livro que faz refletir."'
+      capa: 'https://images-na.ssl-images-amazon.com/images/I/71kxa1-0mfL.jpg',
+      comentario: 'Livro que faz refletir.'
     },
     {
       id: 3,
@@ -41,13 +43,15 @@ function App() {
       genero: 'Drama',
       avaliacao: 5,
       tags: 'intenso, viciante',
-      capa: '',
-      comentario: '"Série top, vale muito a pena."'
+      capa: 'https://upload.wikimedia.org/wikipedia/en/6/61/Breaking_Bad_title_card.png',
+      comentario: 'Série top, vale muito a pena.'
     }
   ]);
 
+  // Estado para editar
   const [editId, setEditId] = useState(null);
 
+  // Adicionar ou salvar edição
   const adicionarItem = () => {
     if (!titulo || !tipo) {
       alert('Preencha pelo menos o título e o tipo.');
@@ -55,6 +59,7 @@ function App() {
     }
 
     if (editId) {
+      // Editar item
       setItens(itens.map(item => item.id === editId
         ? {
           ...item,
@@ -65,6 +70,7 @@ function App() {
         : item));
       setEditId(null);
     } else {
+      // Novo item
       const novoItem = {
         id: Date.now(),
         titulo,
@@ -92,6 +98,7 @@ function App() {
     setComentario('');
   };
 
+  // Carregar item para edição
   const editarItem = (id) => {
     const item = itens.find(i => i.id === id);
     if (item) {
@@ -108,6 +115,7 @@ function App() {
     }
   };
 
+  // Excluir item
   const excluirItem = (id) => {
     if (window.confirm('Tem certeza que deseja excluir este item?')) {
       setItens(itens.filter(i => i.id !== id));
@@ -118,61 +126,57 @@ function App() {
     <>
       <div className="formulario">
         <h1>Biblioteca de Favoritos</h1>
-
-        <div className="inputs-container">
-          <input
-            type="text"
-            placeholder="Título"
-            value={titulo}
-            onChange={e => setTitulo(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Criador/Autor"
-            value={autor}
-            onChange={e => setAutor(e.target.value)}
-          />
-          <select value={tipo} onChange={e => setTipo(e.target.value)}>
-            <option value="">Tipo</option>
-            <option value="movie">Filme</option>
-            <option value="book">Livro</option>
-            <option value="serie">Série</option>
-            <option value="music">Música</option>
-            <option value="game">Jogo</option>
-          </select>
-          <input
-            type="text"
-            placeholder="Gênero"
-            value={genero}
-            onChange={e => setGenero(e.target.value)}
-          />
-          <input
-            type="number"
-            min="0"
-            max="5"
-            placeholder="Avaliação (0-5)"
-            value={avaliacao}
-            onChange={e => setAvaliacao(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Tags (separadas por vírgula)"
-            value={tags}
-            onChange={e => setTags(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="URL da Capa"
-            value={capa}
-            onChange={e => setCapa(e.target.value)}
-          />
-          <textarea
-            placeholder="Comentários"
-            value={comentario}
-            onChange={e => setComentario(e.target.value)}
-          />
-        </div>
-
+        <input
+          type="text"
+          placeholder="Título"
+          value={titulo}
+          onChange={e => setTitulo(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Criador/Autor"
+          value={autor}
+          onChange={e => setAutor(e.target.value)}
+        />
+        <select value={tipo} onChange={e => setTipo(e.target.value)}>
+          <option value="">Tipo</option>
+          <option value="movie">Filme</option>
+          <option value="book">Livro</option>
+          <option value="serie">Série</option>
+          <option value="music">Música</option>
+          <option value="game">Jogo</option>
+        </select>
+        <input
+          type="text"
+          placeholder="Gênero"
+          value={genero}
+          onChange={e => setGenero(e.target.value)}
+        />
+        <input
+          type="number"
+          min="0"
+          max="5"
+          placeholder="Avaliação (0-5)"
+          value={avaliacao}
+          onChange={e => setAvaliacao(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Tags (separadas por vírgula)"
+          value={tags}
+          onChange={e => setTags(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="URL da Capa"
+          value={capa}
+          onChange={e => setCapa(e.target.value)}
+        />
+        <textarea
+          placeholder="Comentários"
+          value={comentario}
+          onChange={e => setComentario(e.target.value)}
+        />
         <div className="botoes">
           <button onClick={adicionarItem}>
             {editId ? 'Salvar Alterações' : 'Adicionar'}
@@ -206,4 +210,5 @@ function App() {
   );
 }
 
-export default App;
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
